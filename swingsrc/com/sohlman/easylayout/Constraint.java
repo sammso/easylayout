@@ -12,7 +12,7 @@ public class Constraint extends Position
 {
 	
 	/**
-	 * @see Position#Constraint(int, int, int, int, int, int, int, int) 
+	 * @see Position#Position(int, int, int, int, int, int, int, int) 
 	 */
 	public Constraint(int ai_column, int ai_row, int ai_columnSpan, int ai_rowSpan, int ai_hAligment, int ai_vAligment, int ai_hGap, int ai_vGap)
 	{
@@ -20,7 +20,7 @@ public class Constraint extends Position
 	}
 
 	/**
-	 * @see Position#Constraint(int, int, int, int) 
+	 * @see Position#Position(int, int, int, int) 
 	 */
 	public Constraint(int ai_column, int ai_row, int ai_columnSpan, int ai_rowSpan)
 	{
@@ -29,7 +29,7 @@ public class Constraint extends Position
 	}
 
 	/**
-	 * @see Position#Constraint(int, int) 
+	 * @see Position#Position(int, int) 
 	 */
 	public Constraint(int ai_column, int ai_row)
 	{
@@ -37,7 +37,7 @@ public class Constraint extends Position
 	}
 
 	/**
-	 * @see Position#Constraint(int, int, int, int, int, int) 
+	 * @see Position#Position(int, int, int, int, int, int) 
 	 */
 	public Constraint(int ai_column, int ai_row, int ai_hAligment, int ai_vAligment, int ai_hGap, int ai_vGap)
 	{
