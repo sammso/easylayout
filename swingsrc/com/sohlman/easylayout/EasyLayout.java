@@ -8,28 +8,66 @@ import java.awt.LayoutManager2;
 import java.util.Hashtable;
 import java.util.Vector;
 
+
 /**
+ * EasyLayout
+ * <p>
+ * Layout manager for awt and swing. 
+ * Easylayout has designed for creation of professional looking forms 
+ * easily and quicly. 
+ * <p>
+ * EasyLayout is based on grid.  
+ * 
+ * Resizing is based by percentage values of
+ * columns and rows of grid. Components are placed to grid cells and they resize
+ * according to grid resize rule. 
+ * 
+ * 
+ * <pre>
+ *      0      1      2
+ *   +--0%--+-100%-+--0%--+
+ * 0 0%     |      |      |
+ *   +------+------+------+
+ * 1 0%     |      |      |
+ *   +------+------+------+
+ * 2 50%    |      |      |
+ *   +------+------+------+
+ * 3 50%    |      |      |
+ *   +------+------+------+
+ * </pre>
  * 
  * @author Sampsa Sohlman
  * @version 6.5.2003
  */
 public class EasyLayout implements LayoutManager2, java.io.Serializable
 {
+	/**
+	 * @see #EasyLayout(int[], int[] , int[] , int[] , int , int )
+	 */	
+	public final static int MAXCOMPONENTHEIGHT = -1;
+	/**
+	 * @see #EasyLayout(int[], int[] , int[] , int[] , int , int )
+	 */	
+	public final static int MAXCOMPONENTWIDTH = -1;
+
+
+
 	private boolean ib_calculationDone = false;
+
+	private boolean[] ib_isMaxWidths;
+	private boolean[] ib_isMaxHeights;
 
 	private int[] ii_rows;
 	private int[] ii_columns;
 
 	private int[] ii_origColumnWidths;
 	private int[] ii_origRowHeights;
-	private boolean ib_generateColumnWidths;
-	private boolean ib_generateRowHeights;
 
-	private int ii_vGap = 5;
-	private int ii_hGap = 5;
+	private int ii_vGap = 0;
+	private int ii_hGap = 0;
 
 	private int ii_origWidth;
-	private int ii_origHeight; 
+	private int ii_origHeight;
 
 	private int[] ii_origXPositions;
 	private int[] ii_origYPositions;
@@ -39,6 +77,8 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	private Vector iVe_Components = new Vector();
 
 	/**
+	 * With constructor you defined 
+	 * 
 	 * @param ai_origColumnWidths Array of original Column widths in pixels
 	 * @param ai_origRowHeights   Array of original Column heights in pixels  
 	 * @param ai_columns          Array of column percentages
@@ -51,6 +91,11 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 		int li_count = 0;
 		ii_hGap = ai_hGap;
 		ii_vGap = ai_vGap;
+		ii_origXPositions = new int[ai_columns.length];
+		ii_origYPositions = new int[ai_rows.length];
+		ib_isMaxWidths = new boolean[ai_columns.length];
+		ib_isMaxHeights = new boolean[ai_rows.length];	
+				
 		for (int li_index = 0; li_index < ai_columns.length; li_index++)
 		{
 			li_count += ai_columns[li_index];
@@ -76,31 +121,51 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 		if (ai_origColumnWidths != null)
 		{
 			ii_origColumnWidths = ai_origColumnWidths;
-			ib_generateColumnWidths = false;
+			for (int li_index = 0; li_index < ii_origColumnWidths.length; li_index++)
+			{
+				if( ii_origColumnWidths[li_index] == MAXCOMPONENTWIDTH)
+				{
+					ib_isMaxWidths[li_index ] = true;
+				}
+			}			
 		}
 		else
 		{
 			ii_origColumnWidths = new int[ai_columns.length];
-			ib_generateColumnWidths = true;
+			for (int li_index = 0; li_index < ii_origColumnWidths.length; li_index++)
+			{
+				ii_origColumnWidths[li_index] = MAXCOMPONENTWIDTH;
+				ib_isMaxWidths[li_index ] = true;
+			}
 		}
 
 		if (ai_origRowHeights != null)
 		{
 			ii_origRowHeights = ai_origRowHeights;
-			ib_generateRowHeights = false;
+			for (int li_index = 0; li_index < ii_origRowHeights.length; li_index++)
+			{
+				if( ii_origRowHeights[li_index] == MAXCOMPONENTWIDTH)
+				{
+					ib_isMaxHeights[li_index ] = true;
+				}
+			}			
 		}
 		else
 		{
 			ii_origRowHeights = new int[ai_rows.length];
-			ib_generateRowHeights = true;
+			for (int li_index = 0; li_index < ii_origRowHeights.length; li_index++)
+			{
+				ii_origRowHeights[li_index] = MAXCOMPONENTHEIGHT;
+				ib_isMaxHeights[li_index ] = true;
+			}
 		}
 
-		ii_origXPositions = new int[ai_columns.length];
-		ii_origYPositions = new int[ai_rows.length];
+
 	}
 
 	/**
 	 * Column and row size is maximum of each component.preferredSize()
+	 * @see #EasyLayout(int[] , int[] , int[] , int[] , int , int )
 	 * 
 	 * @param ai_columns          Array of column percentages
 	 * @param ai_rows             Array of row persce
@@ -109,7 +174,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	 */
 	public EasyLayout(int[] ai_columns, int[] ai_rows, int ai_hGap, int ai_vGap)
 	{
-		this(null, null, ai_columns, ai_rows, 0, 0);
+		this(null, null, ai_columns, ai_rows, ai_hGap, ai_vGap);
 	}
 
 	/**
@@ -136,6 +201,10 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 			}
 
 			l_Constraint.component = a_Component;
+			Dimension l_Dimension = a_Component.getPreferredSize();
+
+			l_Constraint.origWidth = l_Dimension.width;
+			l_Constraint.origHeight = l_Dimension.height;			
 			iVe_Components.add(l_Constraint);
 			ib_calculationDone = false;
 		}
@@ -169,7 +238,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	public void invalidateLayout(Container a_Container)
 	{
 		//System.out.println("public void invalidateLayout(Container a_Container)");
-		preCalculate(a_Container);
+		calculate(a_Container);
 
 	}
 
@@ -179,7 +248,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	public Dimension maximumLayoutSize(Container a_Container)
 	{
 		//System.out.println("public Dimension maximumLayoutSize(Container a_Container)");
-		preCalculate(a_Container);
+		calculate(a_Container);
 		return null;
 	}
 
@@ -196,7 +265,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	 */
 	public void layoutContainer(Container a_Container)
 	{
-		preCalculate(a_Container);
+		calculate(a_Container);
 		synchronized (a_Container.getTreeLock())
 		{
 			Dimension l_Dimension = a_Container.getSize();
@@ -217,7 +286,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	 */
 	public Dimension minimumLayoutSize(Container a_Container)
 	{
-		preCalculate(a_Container);
+		calculate(a_Container);
 		synchronized (a_Container.getTreeLock())
 		{
 			//System.out.println("public Dimension minimumLayoutSize(Container a_Container)");
@@ -230,7 +299,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	 */
 	public Dimension preferredLayoutSize(Container a_Container)
 	{
-		preCalculate(a_Container);
+		calculate(a_Container);
 		synchronized (a_Container.getTreeLock())
 		{
 			//System.out.println("public Dimension preferredLayoutSize(Container a_Container)");
@@ -250,7 +319,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 
 	}
 
-	private void preCalculate(Container a_Container)
+	private void calculate(Container a_Container)
 	{
 		if (!ib_calculationDone)
 		{
@@ -261,25 +330,20 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 			for (int li_index = 0; li_index < iVe_Components.size(); li_index++)
 			{
 				Constraint l_Constraint = (Constraint)iVe_Components.get(li_index);
-				Component l_Component = l_Constraint.component;
-				//			Dimension l_Dimension = l_Component.getMinimumSize();
-				Dimension l_Dimension = l_Component.getPreferredSize();
-				//System.out.println(l_Component + "\n  " +l_Dimension);
-				l_Constraint.origWidth = l_Dimension.width;
-				l_Constraint.origHeight = l_Dimension.height;
-
-				if (ib_generateColumnWidths && l_Constraint.columnSpan == 1)
+				
+				if (ib_isMaxWidths[l_Constraint.column] && l_Constraint.columnSpan == 1)
 				{
-					if (ii_origColumnWidths[l_Constraint.column] < l_Dimension.width)
+					
+					if (ii_origColumnWidths[l_Constraint.column] < l_Constraint.origWidth)
 					{
-						ii_origColumnWidths[l_Constraint.column] = l_Dimension.width + (2 * l_Constraint.hGap);
+						ii_origColumnWidths[l_Constraint.column] = l_Constraint.origWidth + (2 * l_Constraint.hGap);
 					}
 				}
-				if (ib_generateRowHeights && l_Constraint.rowSpan == 1)
+				if (ib_isMaxHeights[l_Constraint.row] &&  l_Constraint.rowSpan == 1)
 				{
-					if (ii_origRowHeights[l_Constraint.row] < l_Dimension.height)
+					if (ii_origRowHeights[l_Constraint.row] < l_Constraint.origHeight)
 					{
-						ii_origRowHeights[l_Constraint.row] = l_Dimension.height + (2 * l_Constraint.vGap);
+						ii_origRowHeights[l_Constraint.row] = l_Constraint.origHeight + (2 * l_Constraint.vGap);
 					}
 				}
 			}
@@ -328,12 +392,10 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 				l_Constraint.gridOrigWidth = 0;
 				l_Constraint.widthPersentage = 0;
 
-
 				for (int li_i = l_Constraint.column; li_i < l_Constraint.column + l_Constraint.columnSpan; li_i++)
 				{
 					l_Constraint.widthPersentage += ii_columns[li_i];
 					l_Constraint.gridOrigWidth += ii_origColumnWidths[li_i];
-
 
 				}
 
@@ -348,6 +410,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 				}
 
 			}
+			ib_calculationDone = true;
 		}
 	}
 
@@ -381,7 +444,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 		li_newY += a_Constraint.vGap;
 		li_newWidth -= (2 * a_Constraint.hGap);
 		li_newHeight -= (2 * a_Constraint.vGap);
-		
+
 		switch (a_Constraint.hAligment)
 		{
 			case Constraint.LEFT :
@@ -400,13 +463,13 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 			case Constraint.CENTER :
 				if (li_newWidth > a_Constraint.origWidth)
 				{
-					li_newX = li_newX + ( li_newWidth - a_Constraint.origWidth ) / 2;
+					li_newX = li_newX + (li_newWidth - a_Constraint.origWidth) / 2;
 					li_newWidth = a_Constraint.origWidth;
 				}
 				break;
 			default : // Constraint.FULL
 		}
-		
+
 		switch (a_Constraint.vAligment)
 		{
 			case Constraint.TOP :
