@@ -3,7 +3,7 @@
 		EasyLayout build.xml
 	</description>
 	<property name="title" value="EasyLayout"/>
-	<property name="version" value="1.0"/>
+	<property name="version" value="1.1"/>
 	<property name="package" value="EasyLayout_${version}"/>
 	<property name="swingsrc" location="swingsrc"/>
 	<property name="testappsrc" location="testsrc"/>	

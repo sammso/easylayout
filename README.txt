@@ -19,18 +19,24 @@
   Grid of example application.
   
       0      1      2
-   +--0%--+-100%-+--0%--+
- 0 0%     |      |      |
-   +------+------+------+
- 1 0%     |      |      |
-   +------+------+------+
- 2 50%    |      |      |
-   +------+------+------+
- 3 50%    |      |      |
-   +------+------+------+
+    +--0%--+-100%-+--0%--+
+  0 0%     |      |      |
+    +------+------+------+
+  1 0%     |      |      |
+    +------+------+------+
+  2 50%    |      |      |
+    +------+------+------+
+  3 50%    |      |      |
+    +------+------+------+
   
   To run example application
   java -jar testapp.jar on /libs directory
+  
+  ------------------------------------------------------------------------
+  Changes in 1.1
+  
+  Rename Constraint class to Position claass and new Constraint class 
+  created for compatiblity reasons
   
   ------------------------------------------------------------------------
    Licence: Common Public License - v 1.0. See cpl10.txt
