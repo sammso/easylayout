@@ -3,7 +3,7 @@
 		EasyLayout build.xml
 	</description>
 	<property name="title" value="EasyLayout"/>
-	<property name="version" value="1.0b"/>
+	<property name="version" value="1.0"/>
 	<property name="package" value="EasyLayout_${version}"/>
 	<property name="swingsrc" location="swingsrc"/>
 	<property name="testappsrc" location="testsrc"/>	
@@ -11,7 +11,7 @@
 	<property name="distbase"  location="Distribution"/>
 	<property name="distroot"  location="${distbase}/${package}"/>
 	
-	<target name="Init">
+	<target name="Init"> 
 		<tstamp/>
 		<mkdir dir="${distroot}/"/>
 		<mkdir dir="${distroot}/libs"/>
@@ -31,6 +31,17 @@
 		<javac srcdir="${testappsrc}" destdir="${builddir}" classpath="${distroot}/libs/easylayout.jar" optimize="true" nowarn="true"/>
 		<jar jarfile="${distroot}/libs/testapp.jar" basedir="${builddir}" manifest="layouttest.manifest"  compress="true"/>
 		<delete dir="${builddir}" failonerror="false"/>
+	</target>
+	
+	<target name="BuildApplet" depends="Init" description="Compile LayoutManager" >
+	<!-- Complile and create jar -->
+		<mkdir dir="${builddir}"/>
+		<javac destdir="${builddir}" optimize="true" nowarn="true" deprecation="true">
+			<src path="${swingsrc}"/>
+			<src path="${testappsrc}"/>			
+		</javac>
+		<jar jarfile="easyapplet.jar" basedir="${builddir}" compress="true"/>
+		<delete dir="${builddir}" failonerror="false"/>
 	</target>	
 
 	<target name="CreateDist" depends="EasyLayout, ComplileTestApp" description="Create Distribution Package" >
@@ -40,6 +51,7 @@
 		
 		<copy file="build.xml"  todir="${distroot}"/>
 		<copy file="README.txt"  todir="${distroot}"/>		
+		<copy file="cpl10.txt"  todir="${distroot}"/>	
 		<copy file="layouttest.manifest"  todir="${distroot}"/>
 		
 		<!-- JavaDoc -->		
@@ -65,7 +77,6 @@
 		
 				
 		<zip zipfile="${package}.zip" basedir="${distbase}" compress="true"/>
-		<tar tarfile="${package}.tar" basedir="${distbase}" compression="gzip"/>
 		<delete dir="${distbase}"/>
 	</target>
 	

@@ -3,6 +3,8 @@ package com.sohlman.easylayout;
 /**
  * @author Sampsa Sohlman
 /*
+ * This is still here for backward compatiblity.
+ * 
  * Version: 17.11.2003
  *
  */
@@ -10,14 +12,7 @@ public class Constraint extends Position
 {
 	
 	/**
-	 * @param ai_column
-	 * @param ai_row
-	 * @param ai_columnSpan
-	 * @param ai_rowSpan
-	 * @param ai_hAligment
-	 * @param ai_vAligment
-	 * @param ai_hGap
-	 * @param ai_vGap
+	 * @see Position#Constraint(int, int, int, int, int, int, int, int) 
 	 */
 	public Constraint(int ai_column, int ai_row, int ai_columnSpan, int ai_rowSpan, int ai_hAligment, int ai_vAligment, int ai_hGap, int ai_vGap)
 	{
@@ -25,10 +20,7 @@ public class Constraint extends Position
 	}
 
 	/**
-	 * @param ai_column
-	 * @param ai_row
-	 * @param ai_columnSpan
-	 * @param ai_rowSpan
+	 * @see Position#Constraint(int, int, int, int) 
 	 */
 	public Constraint(int ai_column, int ai_row, int ai_columnSpan, int ai_rowSpan)
 	{
@@ -37,8 +29,7 @@ public class Constraint extends Position
 	}
 
 	/**
-	 * @param ai_column
-	 * @param ai_row
+	 * @see Position#Constraint(int, int) 
 	 */
 	public Constraint(int ai_column, int ai_row)
 	{
@@ -46,12 +37,7 @@ public class Constraint extends Position
 	}
 
 	/**
-	 * @param ai_column
-	 * @param ai_row
-	 * @param ai_hAligment
-	 * @param ai_vAligment
-	 * @param ai_hGap
-	 * @param ai_vGap
+	 * @see Position#Constraint(int, int, int, int, int, int) 
 	 */
 	public Constraint(int ai_column, int ai_row, int ai_hAligment, int ai_vAligment, int ai_hGap, int ai_vGap)
 	{

@@ -29,4 +29,9 @@
  3 50%    |      |      |
    +------+------+------+
   
+  To run example application
+  java -jar testapp.jar on /libs directory
+  
   ------------------------------------------------------------------------
+   Licence: Common Public License - v 1.0. See cpl10.txt
+  
