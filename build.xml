@@ -1,0 +1,74 @@
+<project name="EasyLayout" default="CreateDist" basedir=".">
+	<description>
+		EasyLayout build.xml
+	</description>
+	<property name="title" value="EasyLayout 1.0"/>
+	<property name="zipfile" value="EasyLayout.zip"/>
+	<property name="swingsrc" location="swingsrc"/>
+	<property name="testappsrc" location="testsrc"/>	
+	<property name="builddir" location="build"/>
+	<property name="distdir"  location="EasyLayout"/>
+	
+	<target name="Init">
+		<tstamp/>
+		<mkdir dir="${distdir}"/>
+		<mkdir dir="${distdir}/libs"/>
+	</target>
+	
+	<target name="EasyLayout" depends="Init" description="Compile LayoutManager" >
+	<!-- Complile and create jar -->
+		<mkdir dir="${builddir}"/>
+		<javac srcdir="${swingsrc}" destdir="${builddir}" optimize="true" nowarn="true"/>
+		<jar jarfile="${distdir}/libs/easylayout.jar" basedir="${builddir}" compress="true"/>
+		<delete dir="${builddir}" failonerror="false"/>
+	</target>
+
+	<target name="ComplileTestApp" depends="EasyLayout" description="Compile TestApp" >
+	<!-- Complile and create jar -->
+		<mkdir dir="${builddir}"/>
+		<javac srcdir="${testappsrc}" destdir="${builddir}" classpath="${distdir}/libs/easylayout.jar" optimize="true" nowarn="true"/>
+		<jar jarfile="${distdir}/libs/testapp.jar" basedir="${builddir}" manifest="layouttest.manifest"  compress="true"/>
+		<delete dir="${builddir}" failonerror="false"/>
+	</target>	
+
+	<target name="CreateDist" depends="EasyLayout, ComplileTestApp" description="Create Distribution Package" >
+		<!-- Main -->
+		
+
+		
+		<copy file="build.xml"  todir="${distdir}"/>
+		<copy file="README.txt"  todir="${distdir}"/>		
+		<copy file="layouttest.manifest"  todir="${distdir}"/>
+		
+		<!-- JavaDoc -->		
+		
+		<javadoc 
+			destdir="${distdir}/docs/"
+			author="true"
+			version="true"
+			use="true"
+			windowtitle="${title}"
+			>
+			<packageset dir="${swingsrc}" defaultexcludes="yes"/>
+			<doctitle><![CDATA[<h1>${title}</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Sampsa Sohlman 2003</i>]]></bottom>		
+		</javadoc>		
+		<copy todir="${distdir}/swingsrc">
+			<fileset dir="${testappsrc}">
+			</fileset>
+		</copy>		
+		<copy todir="${distdir}/testsrc">
+			<fileset dir="${swingsrc}"/>
+		</copy>
+		
+				
+		<zip zipfile="${zipfile}" basedir="${distdir}" compress="true"/>
+		<delete dir="${distdir}"/>
+	</target>
+	
+	<target name="Clean" description="Clean Up" >
+		<delete file="${zipfile}"/>
+		<delete dir="${distdir}"/>
+		<delete dir="${builddir}"/>
+	</target>
+</project>
