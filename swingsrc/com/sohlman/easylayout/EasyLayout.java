@@ -29,7 +29,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	private int ii_hGap = 5;
 
 	private int ii_origWidth;
-	private int ii_origHeight;
+	private int ii_origHeight; 
 
 	private int[] ii_origXPositions;
 	private int[] ii_origYPositions;
@@ -38,9 +38,19 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 
 	private Vector iVe_Components = new Vector();
 
-	public EasyLayout(int[] ai_origColumnWidths, int[] ai_origRowHeights, int[] ai_columns, int[] ai_rows)
+	/**
+	 * @param ai_origColumnWidths Array of original Column widths in pixels
+	 * @param ai_origRowHeights   Array of original Column heights in pixels  
+	 * @param ai_columns          Array of column percentages
+	 * @param ai_rows             Array of row persce
+	 * @param ai_hGap             Default horizontal gap between componenents
+	 * @param ai_vGap             Default vertical gap between componenents
+	 */
+	public EasyLayout(int[] ai_origColumnWidths, int[] ai_origRowHeights, int[] ai_columns, int[] ai_rows, int ai_hGap, int ai_vGap)
 	{
 		int li_count = 0;
+		ii_hGap = ai_hGap;
+		ii_vGap = ai_vGap;
 		for (int li_index = 0; li_index < ai_columns.length; li_index++)
 		{
 			li_count += ai_columns[li_index];
@@ -89,9 +99,17 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 		ii_origYPositions = new int[ai_rows.length];
 	}
 
-	public EasyLayout(int[] ai_columns, int[] ai_rows)
+	/**
+	 * Column and row size is maximum of each component.preferredSize()
+	 * 
+	 * @param ai_columns          Array of column percentages
+	 * @param ai_rows             Array of row persce
+	 * @param ai_hGap             Default horizontal gap between componenents
+	 * @param ai_vGap             Default vertical gap between componenents
+	 */
+	public EasyLayout(int[] ai_columns, int[] ai_rows, int ai_hGap, int ai_vGap)
 	{
-		this(null, null, ai_columns, ai_rows);
+		this(null, null, ai_columns, ai_rows, 0, 0);
 	}
 
 	/**
@@ -310,19 +328,12 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 				l_Constraint.gridOrigWidth = 0;
 				l_Constraint.widthPersentage = 0;
 
-				Dimension l_Dimension = l_Constraint.component.getPreferredSize();
 
 				for (int li_i = l_Constraint.column; li_i < l_Constraint.column + l_Constraint.columnSpan; li_i++)
 				{
 					l_Constraint.widthPersentage += ii_columns[li_i];
-					if (l_Constraint.hAligment == Constraint.FULL)
-					{
-						l_Constraint.gridOrigWidth += ii_origColumnWidths[li_i];
-					}
-					else
-					{
-						l_Constraint.gridOrigWidth = l_Dimension.width;
-					}
+					l_Constraint.gridOrigWidth += ii_origColumnWidths[li_i];
+
 
 				}
 
@@ -332,14 +343,8 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 				for (int li_i = l_Constraint.row; li_i < l_Constraint.row + l_Constraint.rowSpan; li_i++)
 				{
 					l_Constraint.heightPersentage += ii_rows[li_i];
-					if (l_Constraint.hAligment == Constraint.FULL)
-					{
-						l_Constraint.gridOrigHeight += ii_origRowHeights[li_i];
-					}
-					else
-					{
-						l_Constraint.gridOrigHeight = l_Dimension.height;
-					}
+					l_Constraint.gridOrigHeight += ii_origRowHeights[li_i];
+
 				}
 
 			}
@@ -376,37 +381,32 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 		li_newY += a_Constraint.vGap;
 		li_newWidth -= (2 * a_Constraint.hGap);
 		li_newHeight -= (2 * a_Constraint.vGap);
-		int li_x;
+		
 		switch (a_Constraint.hAligment)
 		{
 			case Constraint.LEFT :
-				if (li_newHeight > a_Constraint.origWidth)
+				if (li_newWidth > a_Constraint.origWidth)
 				{
 					li_newWidth = a_Constraint.origWidth;
 				}
 				break;
 			case Constraint.RIGHT :
-				if (li_newHeight > a_Constraint.origWidth)
+				if (li_newWidth > a_Constraint.origWidth)
 				{
 					li_newX = li_newX + li_newWidth - a_Constraint.origWidth;
 					li_newWidth = a_Constraint.origWidth;
 				}
 				break;
 			case Constraint.CENTER :
-				//FIX
-				li_x = li_newX + (li_newWidth - a_Constraint.origWidth) / 2;
-				if (li_x > li_newX)
+				if (li_newWidth > a_Constraint.origWidth)
 				{
-					li_newX = li_x;
-				}
-				if (li_newHeight > a_Constraint.origWidth)
-				{
+					li_newX = li_newX + ( li_newWidth - a_Constraint.origWidth ) / 2;
 					li_newWidth = a_Constraint.origWidth;
 				}
 				break;
 			default : // Constraint.FULL
 		}
-		int li_y;
+		
 		switch (a_Constraint.vAligment)
 		{
 			case Constraint.TOP :
@@ -416,31 +416,21 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 				}
 				break;
 			case Constraint.BOTTOM :
-				li_y = li_newY + li_newHeight - a_Constraint.origHeight;
-				if (li_y > li_newY)
-				{
-					li_newY = li_y;
-				}
 				if (li_newHeight > a_Constraint.origHeight)
 				{
+					li_newY = li_newY + li_newHeight - a_Constraint.origHeight;
 					li_newHeight = a_Constraint.origHeight;
 				}
 				break;
 			case Constraint.CENTER :
-				// FIX
-				li_y = li_newY + (li_newHeight - a_Constraint.origHeight) / 2;
-				if (li_y > li_newY)
-				{
-					li_newY = li_y;
-				}
 				if (li_newHeight > a_Constraint.origHeight)
 				{
+					li_newY = li_newY + (li_newHeight - a_Constraint.origHeight) / 2;
 					li_newHeight = a_Constraint.origHeight;
 				}
 				break;
 			default : // Constraint.FULL
 		}
-
 		a_Constraint.component.setBounds(li_newX, li_newY, li_newWidth, li_newHeight);
 	}
 }
