@@ -3,9 +3,7 @@ package com.sohlman.easylayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.awt.LayoutManager2;
-import java.util.Hashtable;
 import java.util.Vector;
 
 
@@ -72,7 +70,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 	private int[] ii_origXPositions;
 	private int[] ii_origYPositions;
 
-	private Constraint i_Constraint_Default = new Constraint(0, 0, 1, 1);
+	private Position i_Constraint_Default = new Position(0, 0, 1, 1);
 
 	private Vector iVe_Components = new Vector();
 
@@ -188,14 +186,14 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 		{
 			aO_Constraint = i_Constraint_Default;
 		}
-		if (aO_Constraint instanceof Constraint)
+		if (aO_Constraint instanceof Position)
 		{
-			Constraint l_Constraint = (Constraint)aO_Constraint;
-			if (l_Constraint.hGap == Constraint.DEFAULT)
+			Position l_Constraint = (Position)aO_Constraint;
+			if (l_Constraint.hGap == Position.DEFAULT)
 			{
 				l_Constraint.hGap = ii_hGap;
 			}
-			if (l_Constraint.vGap == Constraint.DEFAULT)
+			if (l_Constraint.vGap == Position.DEFAULT)
 			{
 				l_Constraint.vGap = ii_vGap;
 			}
@@ -275,7 +273,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 
 			for (int li_index = 0; li_index < iVe_Components.size(); li_index++)
 			{
-				Constraint l_Constraint = (Constraint)iVe_Components.get(li_index);
+				Position l_Constraint = (Position)iVe_Components.get(li_index);
 				layoutComponent(l_Constraint, li_xAdd, li_yAdd);
 			}
 		}
@@ -329,7 +327,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 
 			for (int li_index = 0; li_index < iVe_Components.size(); li_index++)
 			{
-				Constraint l_Constraint = (Constraint)iVe_Components.get(li_index);
+				Position l_Constraint = (Position)iVe_Components.get(li_index);
 				
 				if (ib_isMaxWidths[l_Constraint.column] && l_Constraint.columnSpan == 1)
 				{
@@ -377,7 +375,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 
 			for (int li_index = 0; li_index < iVe_Components.size(); li_index++)
 			{
-				Constraint l_Constraint = (Constraint)iVe_Components.get(li_index);
+				Position l_Constraint = (Position)iVe_Components.get(li_index);
 				l_Constraint.origX = ii_origXPositions[l_Constraint.column];
 				l_Constraint.origY = ii_origYPositions[l_Constraint.row];
 				if (l_Constraint.column > 0)
@@ -414,7 +412,7 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 		}
 	}
 
-	private void layoutComponent(Constraint a_Constraint, int ai_xAdd, int ai_yAdd)
+	private void layoutComponent(Position a_Constraint, int ai_xAdd, int ai_yAdd)
 	{
 		int li_newX = a_Constraint.origX;
 		int li_newY = a_Constraint.origY;
@@ -447,20 +445,20 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 
 		switch (a_Constraint.hAligment)
 		{
-			case Constraint.LEFT :
+			case Position.LEFT :
 				if (li_newWidth > a_Constraint.origWidth)
 				{
 					li_newWidth = a_Constraint.origWidth;
 				}
 				break;
-			case Constraint.RIGHT :
+			case Position.RIGHT :
 				if (li_newWidth > a_Constraint.origWidth)
 				{
 					li_newX = li_newX + li_newWidth - a_Constraint.origWidth;
 					li_newWidth = a_Constraint.origWidth;
 				}
 				break;
-			case Constraint.CENTER :
+			case Position.CENTER :
 				if (li_newWidth > a_Constraint.origWidth)
 				{
 					li_newX = li_newX + (li_newWidth - a_Constraint.origWidth) / 2;
@@ -472,20 +470,20 @@ public class EasyLayout implements LayoutManager2, java.io.Serializable
 
 		switch (a_Constraint.vAligment)
 		{
-			case Constraint.TOP :
+			case Position.TOP :
 				if (li_newHeight > a_Constraint.origHeight)
 				{
 					li_newHeight = a_Constraint.origHeight;
 				}
 				break;
-			case Constraint.BOTTOM :
+			case Position.BOTTOM :
 				if (li_newHeight > a_Constraint.origHeight)
 				{
 					li_newY = li_newY + li_newHeight - a_Constraint.origHeight;
 					li_newHeight = a_Constraint.origHeight;
 				}
 				break;
-			case Constraint.CENTER :
+			case Position.CENTER :
 				if (li_newHeight > a_Constraint.origHeight)
 				{
 					li_newY = li_newY + (li_newHeight - a_Constraint.origHeight) / 2;

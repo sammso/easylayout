@@ -5,12 +5,13 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.sohlman.easylayout.Constraint;
+import com.sohlman.easylayout.Position;
 import com.sohlman.easylayout.EasyLayout;
 
 /**
@@ -39,29 +40,32 @@ public class LayoutFrame extends JFrame
 
 	protected void createControls()
 	{
+		setTitle("EasyLayout TestApplication");
 		JPanel l_JPanel_ContentPane = (JPanel)this.getContentPane();
-		int[] li_columnSizes = null; //{100,100,100,100};
-		int[] li_rowSizes = null; //{20,40,20,20,20};
 		int[] li_columnsPercentages = { 0, 100, 0 };
 		int[] li_rowPercentages = { 0, 0, 50, 50 };
 
-		EasyLayout l_EasyLayout = new EasyLayout(li_columnSizes, li_rowSizes, li_columnsPercentages, li_rowPercentages, 3, 3);
+		EasyLayout l_EasyLayout = new EasyLayout(null, null, li_columnsPercentages, li_rowPercentages, 3, 3);
 		l_JPanel_ContentPane.setLayout(l_EasyLayout);
 
 		JButton l_JButton_Ok = new JButton("Ok");
-		JButton l_JButton_Cancel = new JButton("Save");
+		JButton l_JButton_Cancel = new JButton("Cancel");
 		JLabel l_JLabel_Text = new JLabel("Salutation");
-		JTextField l_JTextField_Text = new JTextField("Hello world");
-		JTextField l_JTextField_Text2 = new JTextField("Hello 2");
-		JTextField l_JTextField_Text3 = new JTextField("Hello 3");
+		JTextField l_JTextField_Text1 = new JTextField("Hello world");
+		JTextField l_JTextField_Text2 = new JTextField("Good bye");
+		JTextField l_JTextField_Text3 = new JTextField("");
 
-		l_JPanel_ContentPane.add(l_JButton_Ok, new Constraint(2, 0, 1, 1));
-		//l_JPanel_ContentPane.add(l_JButton_Ok, new Constraint(2,0,1,1,Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
-		l_JPanel_ContentPane.add(l_JButton_Cancel, new Constraint(2, 1, 1, 1, Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
-		l_JPanel_ContentPane.add(l_JTextField_Text, new Constraint(1, 0, 1, 1, Constraint.FULL, Constraint.CENTER, Constraint.DEFAULT, Constraint.DEFAULT));
-		l_JPanel_ContentPane.add(l_JLabel_Text, new Constraint(0, 0, 1, 1, Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
-		l_JPanel_ContentPane.add(l_JTextField_Text2, new Constraint(1, 2, 1, 1, Constraint.CENTER, Constraint.CENTER, Constraint.DEFAULT, Constraint.DEFAULT));
-		l_JPanel_ContentPane.add(l_JTextField_Text3, new Constraint(1, 3, 1, 1, Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
+		String[] lS_Items = { "Hello world", "Hola Mundo", "Terve maailma" };
+		JComboBox l_JComboBox = new JComboBox(lS_Items);
+
+		// l_JPanel_ContentPane.add(l_JButton_Ok, new Constraint(2, 0, 1, 1, Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
+		l_JPanel_ContentPane.add(l_JButton_Ok, new Position(2, 0));
+		l_JPanel_ContentPane.add(l_JComboBox, new Position(1,1));
+		l_JPanel_ContentPane.add(l_JButton_Cancel, new Position(2, 1, 1, 1, Position.FULL, Position.FULL));
+		l_JPanel_ContentPane.add(l_JTextField_Text1, new Position(1, 0, 1, 1, Position.FULL, Position.CENTER, Position.DEFAULT, Position.DEFAULT));
+		l_JPanel_ContentPane.add(l_JLabel_Text, new Position(0, 0, 1, 1, Position.FULL, Position.FULL, Position.DEFAULT, Position.DEFAULT));
+		l_JPanel_ContentPane.add(l_JTextField_Text2, new Position(1, 2, 1, 1, Position.CENTER, Position.CENTER, Position.DEFAULT, Position.DEFAULT));
+		l_JPanel_ContentPane.add(l_JTextField_Text3, new Position(1, 3, 2, 1, Position.FULL, Position.FULL, Position.DEFAULT, Position.DEFAULT));
 		pack();
 	}
 
