@@ -15,7 +15,7 @@ public class Constraint implements Serializable
 	public final static int RIGHT = 3;
 	public final static int BOTTOM = 3;
 	public final static int CENTER = 4;
-	public final static int NOGAP = -1;
+	public final static int DEFAULT = -1;
 
 	int column;
 	int row;
@@ -25,6 +25,8 @@ public class Constraint implements Serializable
 	int yPersentage;
 	int widthPersentage;
 	int heightPersentage;
+	int gridOrigHeight;
+	int gridOrigWidth;
 	int origHeight;
 	int origWidth;
 	int origX;
@@ -53,7 +55,7 @@ public class Constraint implements Serializable
 
 	public Constraint(int ai_column, int ai_row, int ai_columnSpan, int ai_rowSpan)
 	{
-		this(ai_column, ai_row, ai_columnSpan, ai_rowSpan, FULL, FULL, NOGAP, NOGAP);
+		this(ai_column, ai_row, ai_columnSpan, ai_rowSpan, FULL, FULL, DEFAULT, DEFAULT);
 	}
 
 	public String toString()
@@ -71,6 +73,10 @@ public class Constraint implements Serializable
 			+ this.origX
 			+ ",origY="
 			+ this.origY
+			+ ",gridOrigWidth="
+			+ this.gridOrigWidth
+			+ ",gridOrigHeight="
+			+ this.gridOrigHeight
 			+ ",origWidth="
 			+ this.origWidth
 			+ ",origHeight="

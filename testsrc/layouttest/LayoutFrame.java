@@ -56,12 +56,12 @@ public class LayoutFrame extends JFrame
 		JTextField l_JTextField_Text2 = new JTextField("Hello 2");
 		JTextField l_JTextField_Text3 = new JTextField("Hello 3");
 
-		l_JPanel_ContentPane.add(l_JButton_Ok, new Constraint(2,0,1,1));
-		l_JPanel_ContentPane.add(l_JButton_Cancel, new Constraint(2,1,1,1));
-		l_JPanel_ContentPane.add(l_JTextField_Text, new Constraint(1,0,1,1,Constraint.FULL, Constraint.FULL, Constraint.NOGAP, Constraint.NOGAP));
-		l_JPanel_ContentPane.add(l_JLabel_Text, new Constraint(0,0,1,1));
-		l_JPanel_ContentPane.add(l_JTextField_Text2, new Constraint(1,2,1,1,Constraint.LEFT, Constraint.TOP, Constraint.NOGAP, Constraint.NOGAP));
-		l_JPanel_ContentPane.add(l_JTextField_Text3, new Constraint(1,3,1,1,Constraint.RIGHT, Constraint.CENTER, Constraint.NOGAP, Constraint.NOGAP));
+		l_JPanel_ContentPane.add(l_JButton_Ok, new Constraint(2,0,1,1,Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
+		l_JPanel_ContentPane.add(l_JButton_Cancel, new Constraint(2,1,1,1,Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
+		l_JPanel_ContentPane.add(l_JTextField_Text, new Constraint(1,0,1,1,Constraint.FULL, Constraint.TOP, Constraint.DEFAULT, Constraint.DEFAULT));
+		l_JPanel_ContentPane.add(l_JLabel_Text, new Constraint(0,0,1,1,Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
+		l_JPanel_ContentPane.add(l_JTextField_Text2, new Constraint(1,2,1,1,Constraint.RIGHT, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
+		l_JPanel_ContentPane.add(l_JTextField_Text3, new Constraint(1,3,1,1,Constraint.FULL, Constraint.FULL, Constraint.DEFAULT, Constraint.DEFAULT));
 		pack();
 	}
 
